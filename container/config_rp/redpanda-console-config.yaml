@@ -1,0 +1,8 @@
+server:
+  allowedOrigins: ["http://localhost:8888","http://127.0.0.1:8888"]
+kafka:
+  schemaRegistry:
+    enabled: true
+    urls: ["http://karapace-registry:8081"]
+##  username: user_name
+##  password: user_password
