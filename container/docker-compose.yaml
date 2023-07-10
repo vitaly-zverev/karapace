@@ -1,17 +1,52 @@
 version: '3'
 services:
-  application:
+  integration_test1:
+    image: "curlimages/curl"
+    command: | 
+         -X POST   "http://karapace-registry:8081/subjects/demo1/versions"  
+         -H "Content-Type: application/vnd.schemaregistry.v1+json"  
+         -d '
+            {"schema": "{\"type\":\"record\",\"name\":\"sensor_sample\",\"fields\":[{\"name\":\"timestamp\",\"type\":\"long\",\"logicalType\":\"timestamp-millis\"},
+            {\"name\":\"identifier\",\"type\":\"string\",\"logicalType\":\"uuid\"},
+            {\"name\":\"value\",\"type\":\"long\"}]}"}
+            '
+    depends_on:
+      kafka:
+          condition: service_healthy
+          restart: true
+      karapace-registry:
+          condition: service_healthy
+          restart: true
+
+  kafka_magic:
     image: "digitsy/kafka-magic"
     ports:
       - 8080:80
     volumes:
-            - ./config:/config
+            - ./config_km:/config
     environment:
       KMAGIC_ALLOW_TOPIC_DELETE: "true"
       KMAGIC_ALLOW_SCHEMA_DELETE: "true"
       KMAGIC_CONFIG_STORE_TYPE: "file"
       KMAGIC_CONFIG_STORE_CONNECTION: "Data Source=/config/KafkaMagicConfig.db;"
       KMAGIC_CONFIG_ENCRYPTION_KEY: "P@ssw0rd"        
+    depends_on:
+      - kafka
+      - karapace-registry
+
+  redpandadata_console:
+    image: "docker.redpanda.com/redpandadata/console:latest"
+    ports:
+      - 8888:8080
+    volumes:
+      - ./config_rp:/config/      
+    environment:
+      KAFKA_BROKERS: "kafka:9092"
+      CONFIG_FILEPATH: "/config/redpanda-console-config.yaml"
+    depends_on:
+      - kafka
+      - karapace-registry
+
 
   schema-registry-ui:
     image: landoop/schema-registry-ui
@@ -37,6 +72,11 @@ services:
     ports:
       - "9101:9101"  # JMX
       - "9092:9092"  # Kafka
+    healthcheck: 
+        test: ["CMD", "curl", "-f", "http://karapace-registry:8081"]
+        interval: 3s
+        timeout: 1s
+        retries: 5          
     environment:
       # Listeners:
       # PLAINTEXT_HOST -> Expose kafka to the host network
