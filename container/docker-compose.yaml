@@ -1,5 +1,16 @@
 version: '3'
 services:
+  producer:
+    build: ./producer
+    depends_on:
+      kafka:
+          condition: service_healthy
+          restart: true
+      karapace-registry:
+          condition: service_healthy
+          restart: true
+    
+
   integration_test1:
     image: "curlimages/curl"
     command: | 
@@ -17,6 +28,7 @@ services:
       karapace-registry:
           condition: service_healthy
           restart: true
+
 ## https://docs.confluent.io/platform/current/schema-registry/schema_registry_onprem_tutorial.html
 #          
   integration_test2:
