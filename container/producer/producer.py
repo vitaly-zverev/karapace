@@ -36,7 +36,9 @@ avro_message = {
 
 # Отправка сообщения в Kafka с автоматической регистрацией схемы
 avro_producer.produce(topic=topic, value=avro_message, value_schema=avro_producer._value_schema, key=None)
+avro_producer.produce(topic=topic, value=avro_message, value_schema=avro_producer._value_schema, key=None)
+avro_producer.produce(topic=topic, value=avro_message, value_schema=avro_producer._value_schema, key=None)
 
 ## Для успешной авторегистрации схемы даже флаш не требуется !!!
-#avro_producer.flush()
+avro_producer.flush()
 
