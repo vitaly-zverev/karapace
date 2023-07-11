@@ -23,7 +23,16 @@ services:
     image: "curlimages/curl"
     command: | 
           -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" 
-          -data '{>   --data '{"schema": "{\"type\":\"record\",\"name\":\"Payment\",\"namespace\":\"io.confluent.examples.clients.basicavro\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"double\"}]}"}' 
+          --data 
+          '
+            {"schema": "{\"type\":\"record\",\"name\":\"Payment\",
+              \"namespace\":\"io.confluent.examples.clients.basicavro\",
+              \"fields\":[
+                  {\"name\":\"id\",\"type\":\"string\"},
+                  {\"name\":\"amount\",\"type\":\"double\"}
+                  ]}
+            "}
+          '
           http://karapace-registry:8081/subjects/test-value/versions
     depends_on:
       kafka:
