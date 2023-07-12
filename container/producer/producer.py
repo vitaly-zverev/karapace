@@ -1,10 +1,14 @@
 ####
 # pip install confluent-kafka[avro] --upgrade 
 ####
-from confluent_kafka import avro
+import confluent_kafka 
+from confluent_kafka import avro 
 from confluent_kafka.avro import AvroProducer
+from confluent_kafka.schema_registry.avro import AvroSerializer
 from confluent_kafka.admin import AdminClient, NewTopic
 import os
+
+print (f"Confluent_kafka (python package) version: {confluent_kafka.__version__} ")
 
 # Настройка параметров Kafka и реестра схем
 kafka_bootstrap_servers = 'kafka:9092'
@@ -19,10 +23,22 @@ admin_client.create_topics([new_topic])
 
 
 # Создание объекта AvroProducer с настройками
-avro_producer = AvroProducer({
+## DeprecationWarning: AvroProducer has been deprecated. Use AvroSerializer instead.
+## https://docs.confluent.io/platform/current/clients/confluent-kafka-python/html/_modules/confluent_kafka/schema_registry/avro.html#AvroSerializer
+avro_producer = AvroProducer(config={
     'bootstrap.servers': kafka_bootstrap_servers,
     'schema.registry.url': schema_registry_url
-}, default_value_schema=avro.load( os.path.join(os.getcwd(),'./path_to_avro_schema.avsc')))
+}, default_value_schema=avro.load( os.path.join(os.getcwd(),'./container/producer/path_to_avro_schema_for_value_validation.avsc'))
+ , default_key_schema  =avro.load( os.path.join(os.getcwd(),'./container/producer/path_to_avro_schema_for_key_validation.avsc'))
+)
+
+#avro_producer = AvroSerializer(config={
+#    'bootstrap.servers': kafka_bootstrap_servers,
+#    'schema.registry.url': schema_registry_url}, 
+#    schema_str=avro.load( os.path.join(os.getcwd(),'./path_to_avro_schema_for_value_validation.avsc'))
+#)
+
+
 
 # Получение объекта производителя Kafka
 # kafka_producer = avro_producer.get_producer()
@@ -35,10 +51,18 @@ avro_message = {
 }
 
 # Отправка сообщения в Kafka с автоматической регистрацией схемы
-avro_producer.produce(topic=topic, value=avro_message, value_schema=avro_producer._value_schema, key=None)
-avro_producer.produce(topic=topic, value=avro_message, value_schema=avro_producer._value_schema, key=None)
-avro_producer.produce(topic=topic, value=avro_message, value_schema=avro_producer._value_schema, key=None)
+# avro_producer.produce(topic=topic, value=avro_message, value_schema=avro_producer._value_schema, key=None)
+# avro_producer.produce(topic=topic, value=avro_message, value_schema=avro_producer._value_schema, key=None)
+# avro_producer.produce(topic=topic, value=avro_message, value_schema=avro_producer._value_schema, key=None)
 
-## Для успешной авторегистрации схемы даже флаш не требуется !!!
+# Отправка сообщения в Kafka с автоматической регистрацией схем (и для ключа и для значения)
+# и так тоже работает
+avro_producer.produce(topic=topic, value=avro_message, key= {"key1":1})
+avro_producer.produce(topic=topic, value=avro_message, key= {"key1":2})
+avro_producer.produce(topic=topic, value=avro_message, key= {"key1":3})
+
+
+## Для успешной авторегистрации схемы флаш не требуется
+# но мы сообщения тоже доставить хотим, потому:
 avro_producer.flush()
 
