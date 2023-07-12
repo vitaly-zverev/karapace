@@ -1,5 +1,18 @@
 version: '3'
 services:
+
+  nifi: 
+    image: "apache/nifi:latest"
+    ports:
+      - 8443:8443
+    depends_on:
+      kafka:
+          condition: service_healthy
+          restart: true
+      karapace-registry:
+          condition: service_healthy
+          restart: true
+
   producer:
     build: ./producer
     depends_on:
