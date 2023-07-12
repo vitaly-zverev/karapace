@@ -1,0 +1,10 @@
+{
+  "type": "record",
+  "name": "MyKey",
+  "fields": [
+    {
+      "name": "key1",
+      "type": "int"
+    }
+  ]
+}
