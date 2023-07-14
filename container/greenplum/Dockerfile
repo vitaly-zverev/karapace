@@ -1,0 +1,1 @@
+FROM andruche/greenplum:7.0.0-b2

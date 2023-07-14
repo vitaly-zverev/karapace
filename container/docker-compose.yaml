@@ -1,7 +1,28 @@
 version: '3'
 services:
-
-  nifi: 
+  pg:  # username/password:  postgres/your_password
+    image: "postgres:alpine3.17"
+    ports:
+     - 5432:5432      
+    environment:       
+      POSTGRES_PASSWORD: "your_password"
+  greenplum: # pgadmin/123456
+    build: ./greenplum
+    ports:
+      - 5433:5432  
+  pgadmin:  # user/password:   admin@example.com/your_password
+    image: "dpage/pgadmin4"
+    ports:
+      - 9898:80
+    environment:
+      # PGADMIN_ENABLE_TLS: "True"  # If left un-set, the container will listen on port 80 for connections in plain text. 
+      PGADMIN_DEFAULT_EMAIL: "admin@example.com"
+      PGADMIN_DEFAULT_PASSWORD: "your_password"
+      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "True" 
+      PGADMIN_CONFIG_LOGIN_BANNER: "'Authorised IT1 users only!'"
+      PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 10     
+  
+  nifi: # dynamic user/password -> look at docker-compose logs nifi | grep "Generated"
     image: "apache/nifi:latest"
     ports:
       - 8443:8443
