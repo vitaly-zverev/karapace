@@ -4,8 +4,7 @@ services:
   vpn:
     image: "jippi/pritunl:latest"
     ports:
-      - 9999:80
-      - 9443:443
+      - 443:443
       - 1194:1194
       - 1194:1194/udp      
     networks:
