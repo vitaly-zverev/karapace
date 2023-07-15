@@ -126,7 +126,12 @@ services:
     ports:
       - 8000:8000
     environment:
-      - SCHEMAREGISTRY_URL=http://localhost:8081
+#      - SCHEMAREGISTRY_URL=http://localhost:8081
+      - SCHEMAREGISTRY_URL=http://karapace-registry:8081   
+      - ALLOW_GLOBAL=1
+      - ALLOW_TRANSITIVE=1
+      - ALLOW_DELETION=1
+      - PROXY=true
     depends_on:
       - karapace-registry
         
