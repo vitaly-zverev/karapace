@@ -1,11 +1,16 @@
 version: '3'
 services:
+############## PostgreSQL ################### 
   pg:  # username/password:  postgres/your_password
     image: "postgres:alpine3.17"
     ports:
      - 5432:5432      
     environment:       
       POSTGRES_PASSWORD: "your_password"
+    networks:
+      - pilot_inernal_net
+
+############## Greenplum ################### 
   greenplum: # pgadmin/123456
     build: ./greenplum
     ports:
@@ -21,7 +26,10 @@ services:
       PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "True" 
       PGADMIN_CONFIG_LOGIN_BANNER: "'Authorised IT1 users only!'"
       PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 10     
-  
+    networks:
+      - pilot_inernal_net
+
+############## NiFi ###################   
   nifi: # dynamic user/password -> look at docker-compose logs nifi | grep "Generated"
     image: "apache/nifi:latest"
     ports:
@@ -35,7 +43,10 @@ services:
       karapace-registry:
           condition: service_healthy
           restart: true
+    networks:
+      - pilot_inernal_net
 
+############## Kafka producer (Example) ################### 
   producer:
     build: ./producer
     depends_on:
@@ -45,8 +56,11 @@ services:
       karapace-registry:
           condition: service_healthy
           restart: true
-    
+    networks:
+      - pilot_inernal_net
 
+    
+############## Kafka schema external publisher (Example #1) ################### 
   integration_test1:
     image: "curlimages/curl"
     command: | 
@@ -64,7 +78,10 @@ services:
       karapace-registry:
           condition: service_healthy
           restart: true
+    networks:
+      - pilot_inernal_net
 
+############## Kafka schema external publisher (Example #2) ################### 
 ## https://docs.confluent.io/platform/current/schema-registry/schema_registry_onprem_tutorial.html
 #          
   integration_test2:
@@ -89,8 +106,11 @@ services:
       karapace-registry:
           condition: service_healthy
           restart: true
+    networks:
+      - pilot_inernal_net
 
 
+############## Kafka Magic (Web client Example 1) ################### 
   kafka_magic:
     image: "digitsy/kafka-magic"
     ports:
@@ -106,7 +126,10 @@ services:
     depends_on:
       - kafka
       - karapace-registry
+    networks:
+      - pilot_inernal_net
 
+############## Redpand console (Web client Example 2) ################### 
   redpandadata_console:
     image: "docker.redpanda.com/redpandadata/console:latest"
     ports:
@@ -119,8 +142,11 @@ services:
     depends_on:
       - kafka
       - karapace-registry
+    networks:
+      - pilot_inernal_net
 
 
+############## Landoop console (Web client Example 3) ################### 
   schema-registry-ui:
     image: "vzverev/schema-registry-ui:v.1.0"   
     # image: landoop/schema-registry-ui
@@ -136,7 +162,10 @@ services:
       PROXY: yes
     depends_on:
       - karapace-registry
-        
+    networks:
+      - pilot_inernal_net
+
+############## Zookeeper ###################
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     ports:
@@ -144,7 +173,10 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - pilot_inernal_net
 
+############## Kafra server ###################         
   kafka:
     image: confluentinc/cp-kafka:latest
     depends_on:
@@ -194,7 +226,10 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_ZOOKEEPER_CONNECTION_TIMEOUT_MS: 6000
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+    networks:
+      - pilot_inernal_net
 
+############## Schema registry server ###################         
   karapace-registry:
     image: ghcr.io/aiven/karapace:develop
     build:
@@ -219,7 +254,10 @@ services:
       KARAPACE_TOPIC_NAME: _schemas
       KARAPACE_LOG_LEVEL: WARNING
       KARAPACE_COMPATIBILITY: FULL
+    networks:
+      - pilot_inernal_net
 
+############## Schema registry REST ###################         
   karapace-rest:
     image: ghcr.io/aiven/karapace:develop
     build:
@@ -243,3 +281,23 @@ services:
       KARAPACE_REGISTRY_PORT: 8081
       KARAPACE_ADMIN_METADATA_MAX_AGE: 0
       KARAPACE_LOG_LEVEL: WARNING
+    networks:
+      - pilot_inernal_net
+
+############## Reverse proxy (Example 1, for exposing Landoop UI) ###################         
+  nginx:
+    image: "nginx-basic-auth"
+    ports:
+      - "9999:80"
+    depends_on:
+      - schema-registry-ui
+    environment: 
+      - FORWARD_HOST=schema-registry-ui
+      - FORWARD_PORT=8000
+      - BASIC_USERNAME=user_name
+      - BASIC_PASSWORD=your_password
+    networks:
+      - pilot_inernal_net
+
+networks:
+  pilot_inernal_net:
