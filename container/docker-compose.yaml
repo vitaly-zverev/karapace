@@ -3,8 +3,8 @@ services:
 ############## PostgreSQL ################### 
   pg:  # username/password:  postgres/your_password
     image: "postgres:alpine3.17"
-    ports:
-     - 5432:5432      
+    #ports:
+    # - 5432:5432      
     environment:       
       POSTGRES_PASSWORD: "your_password"
     networks:
@@ -13,8 +13,8 @@ services:
 ############## Greenplum ################### 
   greenplum: # pgadmin/123456
     build: ./greenplum
-    ports:
-      - 5433:5432  
+    #ports:
+    #  - 5433:5432  
   pgadmin:  # user/password:   admin@example.com/your_password
     image: "dpage/pgadmin4"
     ports:
@@ -32,8 +32,8 @@ services:
 ############## NiFi ###################   
   nifi: # dynamic user/password -> look at docker-compose logs nifi | grep "Generated"
     image: "apache/nifi:latest"
-    ports:
-      - 8443:8443
+    #ports:
+    #  - 8443:8443
     environment:
       NIFI_WEB_HTTP_PORT: '8443'
     depends_on:
@@ -113,8 +113,8 @@ services:
 ############## Kafka Magic (Web client Example 1) ################### 
   kafka_magic:
     image: "digitsy/kafka-magic"
-    ports:
-      - 8080:80
+    #ports:
+    #  - 8080:80
     volumes:
             - ./config_km:/config
     environment:
@@ -132,8 +132,8 @@ services:
 ############## Redpand console (Web client Example 2) ################### 
   redpandadata_console:
     image: "docker.redpanda.com/redpandadata/console:latest"
-    ports:
-      - 8888:8080
+    #ports:
+    #  - 8888:8080
     volumes:
       - ./config_rp:/config/      
     environment:
@@ -151,8 +151,8 @@ services:
     image: "vzverev/schema-registry-ui:v.1.0"   
     # image: landoop/schema-registry-ui
     # image: hausgold/schema-registry-ui
-    ports:
-      - 8000:8000
+    #ports:
+    #  - 8000:8000
     environment:
 #      - SCHEMAREGISTRY_URL=http://localhost:8081
       SCHEMAREGISTRY_URL: http://karapace-registry:8081   
@@ -168,8 +168,8 @@ services:
 ############## Zookeeper ###################
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
-    ports:
-      - "2181:2181"
+    #ports:
+    #  - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -181,9 +181,9 @@ services:
     image: confluentinc/cp-kafka:latest
     depends_on:
       - zookeeper
-    ports:
-      - "9101:9101"  # JMX
-      - "9092:9092"  # Kafka
+    #ports:
+    #  - "9101:9101"  # JMX
+    #  - "9092:9092"  # Kafka
     healthcheck: 
         test: ["CMD", "curl", "-f", "http://karapace-registry:8081"]
         interval: 5s
@@ -241,8 +241,8 @@ services:
       - registry
     depends_on:
       - kafka
-    ports:
-      - "8081:8081"
+    #ports:
+    #  - "8081:8081"
     environment:
       KARAPACE_ADVERTISED_HOSTNAME: karapace-registry
       KARAPACE_BOOTSTRAP_URI: kafka:9092
@@ -270,8 +270,8 @@ services:
     depends_on:
       - kafka
       - karapace-registry
-    ports:
-      - "8082:8082"
+    #ports:
+    #  - "8082:8082"
     environment:
       KARAPACE_PORT: 8082
       KARAPACE_HOST: 0.0.0.0
@@ -285,10 +285,10 @@ services:
       - pilot_inernal_net
 
 ############## Reverse proxy (Example 1, for exposing Landoop UI) ###################         
-  nginx:
+  nginx_landoop:
     image: "nginx-basic-auth"
     ports:
-      - "9999:80"
+      - "9991:80"
     depends_on:
       - schema-registry-ui
     environment: 
@@ -298,6 +298,49 @@ services:
       - BASIC_PASSWORD=your_password
     networks:
       - pilot_inernal_net
+
+  nginx_km:
+    image: "nginx-basic-auth"
+    ports:
+      - "9992:80"
+    depends_on:
+      - kafka_magic
+    environment: 
+      - FORWARD_HOST=kafka_magic
+      - FORWARD_PORT=80
+      - BASIC_USERNAME=user_name
+      - BASIC_PASSWORD=your_password
+    networks:
+      - pilot_inernal_net
+
+  nginx_rp:
+    image: "nginx-basic-auth"
+    ports:
+      - "9993:80"
+    depends_on:
+      - redpandadata_console
+    environment: 
+      - FORWARD_HOST=redpandadata_console
+      - FORWARD_PORT=8080
+      - BASIC_USERNAME=user_name
+      - BASIC_PASSWORD=your_password
+    networks:
+      - pilot_inernal_net
+
+  nginx_nifi:
+    image: "nginx-basic-auth"
+    ports:
+      - "9994:80"
+    depends_on:
+      - nifi
+    environment: 
+      - FORWARD_HOST=nifi
+      - FORWARD_PORT=8443
+      - BASIC_USERNAME=user_name
+      - BASIC_PASSWORD=your_password
+    networks:
+      - pilot_inernal_net
+
 
 networks:
   pilot_inernal_net:
