@@ -1,5 +1,16 @@
 version: '3'
 services:
+############## Pritunl VPN ################### 
+  vpn:
+    image: "jippi/pritunl:latest"
+    ports:
+      - 9999:80
+      - 9443:443
+      - 1194:1194
+      - 1194:1194/udp      
+    networks:
+      - pilot_inernal_net
+
 ############## PostgreSQL ################### 
   pg:  # username/password:  postgres/your_password
     image: "postgres:alpine3.17"
