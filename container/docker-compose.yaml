@@ -26,6 +26,8 @@ services:
     image: "apache/nifi:latest"
     ports:
       - 8443:8443
+    environment:
+      NIFI_WEB_HTTP_PORT: '8443'
     depends_on:
       kafka:
           condition: service_healthy
@@ -145,8 +147,8 @@ services:
       - "9092:9092"  # Kafka
     healthcheck: 
         test: ["CMD", "curl", "-f", "http://karapace-registry:8081"]
-        interval: 3s
-        timeout: 1s
+        interval: 5s
+        timeout: 10s
         retries: 5          
     environment:
       # Listeners:
