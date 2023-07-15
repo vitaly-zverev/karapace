@@ -122,16 +122,18 @@ services:
 
 
   schema-registry-ui:
-    image: landoop/schema-registry-ui
+    image: "vzverev/schema-registry-ui:v.1.0"   
+    # image: landoop/schema-registry-ui
+    # image: hausgold/schema-registry-ui
     ports:
       - 8000:8000
     environment:
 #      - SCHEMAREGISTRY_URL=http://localhost:8081
-      - SCHEMAREGISTRY_URL=http://karapace-registry:8081   
-      - ALLOW_GLOBAL=1
-      - ALLOW_TRANSITIVE=1
-      - ALLOW_DELETION=1
-      - PROXY=true
+      SCHEMAREGISTRY_URL: http://karapace-registry:8081   
+      ALLOW_GLOBAL: 1
+      ALLOW_TRANSITIVE: 1
+      ALLOW_DELETION: 1
+      PROXY: yes
     depends_on:
       - karapace-registry
         
