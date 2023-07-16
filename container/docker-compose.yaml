@@ -3,6 +3,8 @@ services:
 ############## Pritunl VPN ################### 
   vpn:
     image: "jippi/pritunl:latest"
+    restart: unless-stopped
+    privileged: true    
     ports:
       #- 80:80 # Let's encrypt check it (uncomment before push in the cloud or use sed pattern below)
       #<replace_me_with_hash> 
