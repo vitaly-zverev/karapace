@@ -302,7 +302,7 @@ services:
 
 ############## Reverse proxy (Example 1, for exposing Landoop UI) ###################         
   nginx_landoop:
-    image: "nginx-basic-auth"
+    image: "vzverev/nginx-basic-auth:v1.0"
     ports:
       - "9991:80"
     depends_on:
@@ -316,7 +316,7 @@ services:
       - pilot_internal_net
 
   nginx_km:
-    image: "nginx-basic-auth"
+    image: "vzverev/nginx-basic-auth:v1.0"
     ports:
       - "9992:80"
     depends_on:
@@ -344,7 +344,7 @@ services:
       - pilot_internal_net
 
   nginx_nifi:
-    image: "nginx-basic-auth"
+    image: "vzverev/nginx-basic-auth:v1.0"
     ports:
       - "9994:80"
     depends_on:
