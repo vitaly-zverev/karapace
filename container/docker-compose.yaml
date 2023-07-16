@@ -152,8 +152,12 @@ services:
       KAFKA_BROKERS: "kafka:9092"
       CONFIG_FILEPATH: "/config/redpanda-console-config.yaml"
     depends_on:
-      - kafka
-      - karapace-registry
+      kafka:
+          condition: service_healthy
+          restart: true
+      karapace-registry:
+          condition: service_healthy
+          restart: true    
     networks:
       - pilot_inernal_net
 
