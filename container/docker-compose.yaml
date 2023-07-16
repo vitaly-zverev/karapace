@@ -164,8 +164,8 @@ services:
 
 ############## Landoop console (Web client Example 3) ################### 
   schema-registry-ui:
-    #image: "vzverev/schema-registry-ui:v.1.0"   
-    image: landoop/schema-registry-ui
+    image: "vzverev/schema-registry-ui:v.1.0"   
+    #image: landoop/schema-registry-ui
     # image: hausgold/schema-registry-ui
     #ports:
     #  - 8000:8000
