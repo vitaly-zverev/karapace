@@ -326,7 +326,7 @@ services:
       - pilot_inernal_net
 
   nginx_rp:
-    image: "nginx-basic-auth"
+    image: "vzverev/nginx-basic-auth:v1.0"
     ports:
       - "9993:80"
     depends_on:
