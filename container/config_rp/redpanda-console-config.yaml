@@ -1,5 +1,8 @@
 server:
-  allowedOrigins: ["http://localhost:8888","http://127.0.0.1:8888"]
+  #allowedOrigins: ["http://localhost:8888","http://127.0.0.1:8888","http://localhost:9993"] 
+  #allowedOrigins: ["*"]  # universal, but wrong. 
+  allowedOrigins: ["<replace_me_on_real_origin>"]  # Use it as sed placeholder 
+  #allowedOrigins: ["http://localhost:9993","http://127.0.0.1:9993"]  
 kafka:
   schemaRegistry:
     enabled: true
