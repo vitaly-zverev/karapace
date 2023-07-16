@@ -10,7 +10,7 @@ services:
       - 1194:1194
       - 1194:1194/udp      
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
 ############## PostgreSQL ################### 
   pg:  # username/password:  postgres/your_password
@@ -20,7 +20,7 @@ services:
     environment:       
       POSTGRES_PASSWORD: "your_password"
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
 ############## Greenplum ################### 
   greenplum: # pgadmin/123456
@@ -39,7 +39,7 @@ services:
       PGADMIN_CONFIG_LOGIN_BANNER: "'Authorised IT1 users only!'"
       PGADMIN_CONFIG_CONSOLE_LOG_LEVEL: 10     
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
 ############## NiFi ###################   
   nifi: # dynamic user/password -> look at docker-compose logs nifi | grep "Generated"
@@ -56,7 +56,7 @@ services:
           condition: service_healthy
           restart: true
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
 ############## Kafka producer (Example) ################### 
   producer:
@@ -69,7 +69,7 @@ services:
           condition: service_healthy
           restart: true
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
     
 ############## Kafka schema external publisher (Example #1) ################### 
@@ -91,7 +91,7 @@ services:
           condition: service_healthy
           restart: true
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
 ############## Kafka schema external publisher (Example #2) ################### 
 ## https://docs.confluent.io/platform/current/schema-registry/schema_registry_onprem_tutorial.html
@@ -119,7 +119,7 @@ services:
           condition: service_healthy
           restart: true
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
 
 ############## Kafka Magic (Web client Example 1) ################### 
@@ -139,7 +139,7 @@ services:
       - kafka
       - karapace-registry
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
 ############## Redpand console (Web client Example 2) ################### 
   redpandadata_console:
@@ -159,7 +159,7 @@ services:
           condition: service_healthy
           restart: true    
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
 
 ############## Landoop console (Web client Example 3) ################### 
@@ -179,7 +179,7 @@ services:
     depends_on:
       - karapace-registry
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
 ############## Zookeeper ###################
   zookeeper:
@@ -190,7 +190,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
 ############## Kafra server ###################         
   kafka:
@@ -243,7 +243,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECTION_TIMEOUT_MS: 6000
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
 ############## Schema registry server ###################         
   karapace-registry:
@@ -271,7 +271,7 @@ services:
       KARAPACE_LOG_LEVEL: WARNING
       KARAPACE_COMPATIBILITY: FULL
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
 ############## Schema registry REST ###################         
   karapace-rest:
@@ -298,7 +298,7 @@ services:
       KARAPACE_ADMIN_METADATA_MAX_AGE: 0
       KARAPACE_LOG_LEVEL: WARNING
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
 ############## Reverse proxy (Example 1, for exposing Landoop UI) ###################         
   nginx_landoop:
@@ -313,7 +313,7 @@ services:
       - BASIC_USERNAME=user_name
       - BASIC_PASSWORD=your_password
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
   nginx_km:
     image: "nginx-basic-auth"
@@ -327,7 +327,7 @@ services:
       - BASIC_USERNAME=user_name
       - BASIC_PASSWORD=your_password
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
   nginx_rp:
     image: "vzverev/nginx-basic-auth:v1.0"
@@ -341,7 +341,7 @@ services:
       - BASIC_USERNAME=user_name
       - BASIC_PASSWORD=your_password
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
   nginx_nifi:
     image: "nginx-basic-auth"
@@ -355,8 +355,8 @@ services:
       - BASIC_USERNAME=user_name
       - BASIC_PASSWORD=your_password
     networks:
-      - pilot_inernal_net
+      - pilot_internal_net
 
 
 networks:
-  pilot_inernal_net:
+  pilot_internal_net:
