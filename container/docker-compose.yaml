@@ -247,7 +247,8 @@ services:
 
 ############## Schema registry server ###################         
   karapace-registry:
-    image: ghcr.io/aiven/karapace:develop
+    #image: ghcr.io/aiven/karapace:develop
+    image: ghcr.io/aiven/karapace
     build:
       context: ..
       dockerfile: container/Dockerfile
