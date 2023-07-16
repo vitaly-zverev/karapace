@@ -4,7 +4,8 @@ services:
   vpn:
     image: "jippi/pritunl:latest"
     ports:
-      - 80:80 # Let's encrypt check it
+      #- 80:80 # Let's encrypt check it (uncomment before push in the cloud or use sed pattern below)
+      #<replace_me_with_hash> 
       - 443:443
       - 1194:1194
       - 1194:1194/udp      
