@@ -11,6 +11,7 @@ services:
       - 443:443
       - 1194:1194
       - 1194:1194/udp      
+      - 18453:18453/udp # default upd port of pritunl
     networks:
       - pilot_internal_net
 
