@@ -30,6 +30,8 @@ services:
     build: ./greenplum
     #ports:
     #  - 5433:5432  
+    networks:
+      - pilot_internal_net
 
 ############## PG Admin ###################     
   pgadmin:  # user/password:   admin@example.com/your_password
