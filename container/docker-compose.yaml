@@ -30,6 +30,8 @@ services:
     build: ./greenplum
     #ports:
     #  - 5433:5432  
+
+############## PG Admin ###################     
   pgadmin:  # user/password:   admin@example.com/your_password
     image: "dpage/pgadmin4"
     ports:
@@ -144,7 +146,7 @@ services:
     networks:
       - pilot_internal_net
 
-############## Redpand console (Web client Example 2) ################### 
+############## Redpanda console (Web client Example 2) ################### 
   redpandadata_console:
     image: "docker.redpanda.com/redpandadata/console:latest"
     #ports:
