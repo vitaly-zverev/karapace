@@ -26,6 +26,8 @@ services:
       - pilot_internal_net
 
 ############## Greenplum ################### 
+# https://habr.com/ru/companies/leroy_merlin/articles/735970/
+#
   greenplum: # pgadmin/123456
     build: ./greenplum
     #ports:
