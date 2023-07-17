@@ -27,8 +27,9 @@ services:
 
 ############## Greenplum ################### 
 # https://habr.com/ru/companies/leroy_merlin/articles/735970/
+# https://github.com/andruche/docker-greenplum/blob/master/7/DockerFile 
 #
-  greenplum: # pgadmin/123456
+  greenplum: # gpadmin/123456  DB: postgres
     build: ./greenplum
     #ports:
     #  - 5433:5432  
