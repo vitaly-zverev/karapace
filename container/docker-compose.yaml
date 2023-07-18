@@ -16,7 +16,7 @@ services:
       - pilot_internal_net
 
 ############## PostgreSQL ################### 
-  pg:  # username/password:  postgres/your_password
+  pg:  # username/password:  postgres/your_password  DB: postgres
     image: "postgres:alpine3.17"
     #ports:
     # - 5432:5432      
