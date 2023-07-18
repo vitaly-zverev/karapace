@@ -1,6 +1,8 @@
 version: '3'
 services:
 ############## Pritunl VPN ################### 
+## https://github.com/jippi/docker-pritunl
+##  https://github.com/pritunl/pritunl
   vpn:
     image: "jippi/pritunl:latest"
     restart: unless-stopped
