@@ -17,7 +17,7 @@ services:
     networks:
       - pilot_internal_net
 
-############## PostgreSQL ################### 
+############## ADCM ################### 
 ### https://network.arenadata.io/arenadata-cluster-manager/downloads#2023.07.10.17
   adcm:
     image: "arenadata/adcm"
@@ -29,7 +29,7 @@ services:
     # - 7080:80
      - 8000:8000
       
-    restart: unless-stopped
+    #restart: unless-stopped
     networks:
       - pilot_internal_net
 
