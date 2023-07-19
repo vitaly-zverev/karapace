@@ -18,6 +18,24 @@ services:
       - pilot_internal_net
 
 ############## PostgreSQL ################### 
+### https://network.arenadata.io/arenadata-cluster-manager/downloads#2023.07.10.17
+  adcm:
+    image: "arenadata/adcm"
+    #image: "hub.arenadata.io/adcm/adcm:latest"
+    #image: "arenadata/adcm:2023.07.10.17_cloud"
+    #image: "arenadata/adcm:2023.04.10.22"
+    ports:
+    # - 7443:8443
+    # - 7080:80
+     - 8000:8000
+      
+    restart: unless-stopped
+    networks:
+      - pilot_internal_net
+
+    
+
+############## PostgreSQL ################### 
   pg:  # username/password:  postgres/your_password  DB: postgres
     image: "postgres:alpine3.17"
     #ports:
